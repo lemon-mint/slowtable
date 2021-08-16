@@ -6,6 +6,7 @@ import (
 	"unsafe"
 
 	"github.com/cespare/xxhash/v2"
+	"github.com/lemon-mint/slowtable/nocopy"
 )
 
 // NewTable : Create a new table
@@ -153,4 +154,22 @@ func (t *Table) Clear() {
 func (t *Table) Exists(key []byte) bool {
 	_, ok := t.Get(key)
 	return ok
+}
+
+// GetS : Get the value for the given key(String)
+// Thread safe
+func (t *Table) GetS(key string) (unsafe.Pointer, bool) {
+	return t.Get(nocopy.S2B(key))
+}
+
+// SetS : Set the value for the given key(String)
+// Thread safe
+func (t *Table) SetS(key string, val unsafe.Pointer) {
+	t.Set(nocopy.S2B(key), val)
+}
+
+// DeleteS : Delete the item from the table
+// Thread safe
+func (t *Table) DeleteS(key string) {
+	t.Delete(nocopy.S2B(key))
 }
