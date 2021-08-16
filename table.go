@@ -11,7 +11,7 @@ import (
 
 // NewTable : Create a new table
 // hash : xxHash64 (default) if hash == nil
-// keysize : The number of keys in the table (default: 65536)
+// keysize : The number of keys in the table (recommended: 65536)
 func NewTable(hash func([]byte) uint64, keysize uint64) *Table {
 	pool := sync.Pool{
 		New: func() interface{} {
