@@ -16,6 +16,29 @@ var keys = func() []string {
 	return tmp
 }()
 
+var keysBytes = func() [][]byte {
+	tmp := make([][]byte, 8192)
+	for i := 0; i < 8192; i++ {
+		tmp[i] = []byte(strconv.Itoa(i))
+	}
+	return tmp
+}()
+
+func BenchmarkSlowTablGetS(b *testing.B) {
+	table := slowtable.NewTable(nil, 65535)
+	table.PoolPreload()
+	for i := 0; i < 8192; i++ {
+		table.SetS(keys[i], nil)
+	}
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			for i := 0; i < 8192; i++ {
+				table.GetS(keys[i])
+			}
+		}
+	})
+}
+
 func BenchmarkSlowTableSetS(b *testing.B) {
 	table := slowtable.NewTable(nil, 65535)
 	table.PoolPreload()
@@ -28,16 +51,28 @@ func BenchmarkSlowTableSetS(b *testing.B) {
 	})
 }
 
-func BenchmarkSlowTablGetS(b *testing.B) {
+func BenchmarkSlowTablGet(b *testing.B) {
 	table := slowtable.NewTable(nil, 65535)
 	table.PoolPreload()
 	for i := 0; i < 8192; i++ {
-		table.SetS(keys[i], nil)
+		table.Set(keysBytes[i], nil)
 	}
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			for i := 0; i < 8192; i++ {
-				table.GetS(keys[i])
+				table.Get(keysBytes[i])
+			}
+		}
+	})
+}
+
+func BenchmarkSlowTableSet(b *testing.B) {
+	table := slowtable.NewTable(nil, 65535)
+	table.PoolPreload()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			for i := 0; i < 8192; i++ {
+				table.Set(keysBytes[i], nil)
 			}
 		}
 	})
