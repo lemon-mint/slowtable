@@ -24,5 +24,4 @@ type Table struct {
 	keysize uint64
 
 	itempool sync.Pool
-	mu       sync.RWMutex
 }
