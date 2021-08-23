@@ -106,6 +106,46 @@ func (t *Table) Get(key []byte) (unsafe.Pointer, bool) {
 	}
 }
 
+func (t *Table) CompareAndSwap(key []byte, old, new unsafe.Pointer) bool {
+	hash := t.hash(key) % t.keysize
+	t.entries[hash].mu.Lock()
+	defer t.entries[hash].mu.Unlock()
+
+	if t.entries[hash].size == 0 && old == nil {
+		t.entries[hash].next = t.itempool.Get().(*item)
+		t.entries[hash].next.key = key
+		t.entries[hash].next.val = new
+		t.entries[hash].size = 1
+		return true
+	}
+
+	var i *item = t.entries[hash].next
+	for {
+		if bytes.Equal(key, i.key) {
+			if i.val == old {
+				i.val = new
+				return true
+			} else {
+				return false
+			}
+		} else {
+			if i.next == nil {
+				if old == nil {
+					i.next = t.itempool.Get().(*item)
+					i.next.key = key
+					i.next.val = new
+					t.entries[hash].size++
+					return true
+				} else {
+					return false
+				}
+			} else {
+				i = i.next
+			}
+		}
+	}
+}
+
 // Delete : Delete the item from the table
 // Thread safe
 func (t *Table) Delete(key []byte) {

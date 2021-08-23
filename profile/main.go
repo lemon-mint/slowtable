@@ -50,7 +50,7 @@ func main() {
 		table.SetS(keys[i], nil)
 	}
 
-	for j := 0; j < 1024*40; j++ {
+	for j := 0; j < 1024; j++ {
 		for i := 0; i < 8192; i++ {
 			table.GetS(keys[i])
 		}
