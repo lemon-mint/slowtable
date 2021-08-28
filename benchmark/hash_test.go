@@ -6,10 +6,10 @@ import (
 	"hash/maphash"
 	"testing"
 
+	"github.com/bytedance/gopkg/util/xxhash3"
 	"github.com/cespare/xxhash/v2"
 	"github.com/dchest/siphash"
 	"github.com/zeebo/blake3"
-	"github.com/zeebo/xxh3"
 	"golang.org/x/crypto/blake2b"
 )
 
@@ -124,7 +124,7 @@ func BenchmarkXXH3(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			for _, data := range TestData {
-				_ = xxh3.Hash(data)
+				_ = xxhash3.Hash(data)
 			}
 		}
 	})

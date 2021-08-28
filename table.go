@@ -5,7 +5,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/cespare/xxhash/v2"
+	"github.com/bytedance/gopkg/util/xxhash3"
 	"github.com/lemon-mint/slowtable/nocopy"
 )
 
@@ -20,7 +20,7 @@ func NewTable(hash func([]byte) uint64, keysize uint64) *Table {
 	}
 
 	if hash == nil {
-		hash = xxhash.Sum64
+		hash = xxhash3.Hash
 	}
 	return &Table{
 		entries:  make([]value, keysize),
