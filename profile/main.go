@@ -27,8 +27,8 @@ var keysBytes = func() [][]byte {
 	return tmp
 }()
 
-var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to `file`")
-var memprofile = flag.String("memprofile", "", "write memory profile to `file`")
+var cpuprofile = flag.String("cpuprofile", "cpu.prof", "write cpu profile to `file`")
+var memprofile = flag.String("memprofile", "mem.prof", "write memory profile to `file`")
 
 func main() {
 	flag.Parse()
@@ -50,7 +50,7 @@ func main() {
 		table.SetS(keys[i], nil)
 	}
 
-	for j := 0; j < 1024; j++ {
+	for j := 0; j < 1024*16; j++ {
 		for i := 0; i < 8192; i++ {
 			table.GetS(keys[i])
 		}
