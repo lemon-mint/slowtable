@@ -3,11 +3,13 @@ package slowtable
 import (
 	"sync"
 	"unsafe"
+
+	"github.com/lemon-mint/slowtable/rwmu"
 )
 
 type value struct {
 	size int64
-	mu   sync.RWMutex
+	mu   rwmu.Mutex
 
 	next *item
 }
