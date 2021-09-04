@@ -9,6 +9,7 @@ import (
 	"github.com/bytedance/gopkg/util/xxhash3"
 	"github.com/cespare/xxhash/v2"
 	"github.com/dchest/siphash"
+	"github.com/segmentio/fasthash/fnv1a"
 	"github.com/zeebo/blake3"
 	"golang.org/x/crypto/blake2b"
 )
@@ -151,6 +152,16 @@ func BenchmarkSiphash(b *testing.B) {
 				h.Write(data)
 				h.Sum64()
 				h.Reset()
+			}
+		}
+	})
+}
+
+func BenchmarkFnv1a(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			for _, data := range TestData {
+				fnv1a.HashBytes64(data)
 			}
 		}
 	})

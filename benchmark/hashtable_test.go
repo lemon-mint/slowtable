@@ -5,7 +5,9 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/cornelk/hashmap"
 	"github.com/lemon-mint/slowtable"
+	"github.com/snowmerak/concurrent"
 )
 
 var keys = func() []string {
@@ -98,6 +100,56 @@ func BenchmarkSyncMapSetS(b *testing.B) {
 		for pb.Next() {
 			for i := 0; i < 8192; i++ {
 				m.Store(keys[i], nil)
+			}
+		}
+	})
+}
+
+func BenchmarkConcurrentGet(b *testing.B) {
+	m := concurrent.NewMap()
+	for i := 0; i < 8192; i++ {
+		m.Set(keys[i], nil)
+	}
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			for i := 0; i < 8192; i++ {
+				m.Get(keys[i])
+			}
+		}
+	})
+}
+
+func BenchmarkConcurrentSet(b *testing.B) {
+	m := concurrent.NewMap()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			for i := 0; i < 8192; i++ {
+				m.Set(keys[i], nil)
+			}
+		}
+	})
+}
+
+func BenchmarkHashMapGet(b *testing.B) {
+	m := hashmap.New(hashmap.DefaultSize)
+	for i := 0; i < 8192; i++ {
+		m.Set(keys[i], nil)
+	}
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			for i := 0; i < 8192; i++ {
+				m.Get(keys[i])
+			}
+		}
+	})
+}
+
+func BenchmarkHashMapSet(b *testing.B) {
+	m := hashmap.New(hashmap.DefaultSize)
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			for i := 0; i < 8192; i++ {
+				m.Set(keys[i], nil)
 			}
 		}
 	})
