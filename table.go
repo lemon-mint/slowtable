@@ -64,6 +64,7 @@ func (t *Table) Set(key []byte, val unsafe.Pointer) {
 
 	var i *item = t.entries[hash].next
 	for {
+
 		if bytes.Equal(key, i.key) {
 			i.val = val
 			return
@@ -161,7 +162,11 @@ func (t *Table) Delete(key []byte) {
 	for {
 		if bytes.Equal(key, i.key) {
 			t.entries[hash].size--
-			t.entries[hash].next = i.next
+			if i.next == nil {
+				t.entries[hash].next = t.itempool.Get().(*item)
+			} else {
+				t.entries[hash].next = i.next
+			}
 			t.putitem(i)
 			return
 		} else {
