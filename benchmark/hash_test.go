@@ -3,6 +3,7 @@ package benchmark_test
 import (
 	"crypto/sha256"
 	"crypto/sha512"
+	"hash/fnv"
 	"hash/maphash"
 	"testing"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/dchest/siphash"
 	"github.com/segmentio/fasthash/fnv1a"
 	"github.com/zeebo/blake3"
+	zeebo_xxh "github.com/zeebo/xxh3"
 	"golang.org/x/crypto/blake2b"
 )
 
@@ -131,6 +133,16 @@ func BenchmarkXXH3(b *testing.B) {
 	})
 }
 
+func BenchmarkZeeboXXH3(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			for _, data := range TestData {
+				_ = zeebo_xxh.Hash(data)
+			}
+		}
+	})
+}
+
 func BenchmarkMaphash(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		var h maphash.Hash
@@ -147,6 +159,58 @@ func BenchmarkMaphash(b *testing.B) {
 func BenchmarkSiphash(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		var h = siphash.New([]byte("0123456789101112"))
+		for pb.Next() {
+			for _, data := range TestData {
+				h.Write(data)
+				h.Sum64()
+				h.Reset()
+			}
+		}
+	})
+}
+
+func BenchmarkStdFnv32(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		var h = fnv.New32()
+		for pb.Next() {
+			for _, data := range TestData {
+				h.Write(data)
+				h.Sum32()
+				h.Reset()
+			}
+		}
+	})
+}
+
+func BenchmarkStdFnv32a(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		var h = fnv.New32a()
+		for pb.Next() {
+			for _, data := range TestData {
+				h.Write(data)
+				h.Sum32()
+				h.Reset()
+			}
+		}
+	})
+}
+
+func BenchmarkStdFnv64(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		var h = fnv.New64()
+		for pb.Next() {
+			for _, data := range TestData {
+				h.Write(data)
+				h.Sum64()
+				h.Reset()
+			}
+		}
+	})
+}
+
+func BenchmarkStdFnv64a(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		var h = fnv.New64a()
 		for pb.Next() {
 			for _, data := range TestData {
 				h.Write(data)
