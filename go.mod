@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/antlinker/go-cmap v0.0.0-20160407022646-0c5e57012e96
 	github.com/bytedance/gopkg v0.0.0-20220623074550-9d6d3df70991
-	github.com/cespare/xxhash/v2 v2.1.1
+	github.com/cespare/xxhash/v2 v2.1.2
 	github.com/cornelk/hashmap v1.0.1
 	github.com/dchest/siphash v1.2.3
 	github.com/segmentio/fasthash v1.0.3
