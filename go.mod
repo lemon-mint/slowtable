@@ -12,6 +12,6 @@ require (
 	github.com/snowmerak/concurrent v0.0.0-20210903100334-847b0d0e166d
 	github.com/zeebo/blake3 v0.2.0
 	github.com/zeebo/xxh3 v1.0.1
-	golang.org/x/crypto v0.0.0-20210813211128-0a44fdfbc16e
+	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	golang.org/x/sys v0.0.0-20211124211545-fe61309f8881 // indirect
 )
