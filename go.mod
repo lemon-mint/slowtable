@@ -7,7 +7,7 @@ require (
 	github.com/bytedance/gopkg v0.0.0-20211117073611-9a8af3eefa95
 	github.com/cespare/xxhash/v2 v2.1.1
 	github.com/cornelk/hashmap v1.0.1
-	github.com/dchest/siphash v1.2.2
+	github.com/dchest/siphash v1.2.3
 	github.com/segmentio/fasthash v1.0.3
 	github.com/snowmerak/concurrent v0.0.0-20210903100334-847b0d0e166d
 	github.com/zeebo/blake3 v0.2.0
